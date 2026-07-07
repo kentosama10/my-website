@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kent Sumbilon | IT Specialist</title>
+  <title>Kent Sumbilon</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet" />
@@ -42,9 +42,10 @@
 
     .hello {
       position: relative;
-      font-size: clamp(3rem, 10vw, 7rem);
+      font-size: min(5.5rem, calc((100vw - 2.5rem) / 12));
       margin: 0 0 2.5rem;
       line-height: 1;
+      white-space: nowrap;
     }
 
     .hello span {
@@ -196,7 +197,7 @@
 </head>
 <body>
   <main>
-    <p class="hello" id="hello" aria-label="Hello"></p>
+    <p class="hello" id="hello" aria-label="Hello World!"></p>
 
     <div class="intro">
       <p class="name">KENT SUMBILON</p>
@@ -207,8 +208,6 @@
       </p>
 
       <div class="meta">
-        <span>TAGUIG CITY, PH</span>
-        <span>RAJAH TRAVEL CORPORATION</span>
         <span>SYSTEMS · SECURITY · AUTOMATION</span>
       </div>
 
@@ -229,21 +228,22 @@
         <span>PYTHON</span>
         <span>PHP</span>
         <span>M365</span>
+        <span>GOOGLE WORKSPACE</span>
         <span>CYBERSECURITY</span>
       </div>
     </div>
 
-    <footer>© 2026 KENT SUMBILON</footer>
+    <footer>©2026 KENT SUMBILON</footer>
   </main>
 
   <script>
     const hello = document.getElementById("hello");
-    const text = "HELLO";
+    const text = "HELLO WORLD!";
 
     [...text].forEach((letter, index) => {
       const span = document.createElement("span");
       const yStart = `${(Math.random() * 60 - 30).toFixed(0)}vh`;
-      span.textContent = letter;
+      span.textContent = letter === " " ? "\u00A0" : letter;
       span.style.setProperty("--y-start", yStart);
       span.style.setProperty("--delay", `${index * 80}ms`);
       hello.appendChild(span);
