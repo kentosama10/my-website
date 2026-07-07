@@ -1,456 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kent Sumbilon | IT Specialist</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kent Sumbilon | IT Specialist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+  <style>
+    @property --b {
+      syntax: "<length>";
+      inherits: true;
+      initial-value: 10vw;
+    }
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    @property --y {
+      syntax: "<length>";
+      inherits: true;
+      initial-value: 0px;
+    }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    * {
+      box-sizing: border-box;
+    }
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    body {
+      font-family: "Rubik Mono One", sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-content: center;
+      background: #fffcfc;
+      color: #1f2020;
+      padding: 2rem 1.25rem;
+    }
 
-        :root {
-            --bg: #08090b;
-            --card: #111318;
-            --panel: #121517;
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #f8fafc;
-            --muted: #a1a1aa;
-            --accent: #a3e635;
-            --accent-soft: rgba(163, 230, 53, 0.12);
-        }
+    main {
+      width: min(920px, 100%);
+      text-align: center;
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at top, #111418 0%, var(--bg) 45%);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-        }
+    .hello {
+      position: relative;
+      font-size: clamp(3rem, 10vw, 7rem);
+      margin: 0 0 2.5rem;
+      line-height: 1;
+    }
 
-        .profile-wrapper {
-            width: 100%;
-            max-width: 980px;
-        }
+    .hello span {
+      --clr: currentcolor;
+      -webkit-text-stroke: 1px whitesmoke;
+      text-shadow:
+        -2px -2px 0 var(--clr),
+        2px -2px 0 var(--clr),
+        -2px 2px 0 var(--clr),
+        2px 2px 0 var(--clr),
+        -3px 0 0 var(--clr),
+        3px 0 0 var(--clr),
+        0 -3px 0 var(--clr),
+        0 3px 0 var(--clr);
+      display: inline-block;
+      --b: 1vw;
+      transform: translateY(var(--y));
+      filter: blur(var(--b));
+      animation:
+        fromblur 2s linear forwards,
+        fromy 2s linear forwards;
+      animation-delay: var(--delay, 0ms);
+    }
 
-        .profile-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 28px 80px rgba(0, 0, 0, 0.36);
-        }
+    @keyframes fromy {
+      0% {
+        --y: var(--y-start, 0px);
+      }
+      100% {
+        --y: 0px;
+      }
+    }
 
-        .hero {
-            padding: 48px;
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 320px;
-            gap: 36px;
-            align-items: start;
-            border-bottom: 1px solid var(--border);
-        }
+    @keyframes fromblur {
+      0%, 60% {
+        --b: 8vw;
+      }
+      60% {
+        --b: 4vw;
+      }
+      100% {
+        --b: 0vw;
+      }
+    }
 
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            border-radius: 999px;
-            background: var(--accent-soft);
-            color: var(--accent);
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 22px;
-        }
+    .intro {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeup 0.8s ease forwards;
+      animation-delay: 1.6s;
+    }
 
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 0 4px rgba(163, 230, 53, 0.12);
-        }
+    @keyframes fadeup {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        .profile-summary h1 {
-            font-size: clamp(2.4rem, 4vw, 3.6rem);
-            font-weight: 700;
-            letter-spacing: -0.05em;
-            margin-bottom: 10px;
-            line-height: 1.05;
-        }
+    .name {
+      font-size: clamp(1.1rem, 3.2vw, 1.75rem);
+      margin: 0 0 0.75rem;
+      letter-spacing: 0.04em;
+    }
 
-        .role {
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-bottom: 24px;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
-            font-weight: 600;
-        }
+    .role {
+      font-size: clamp(0.75rem, 2vw, 1rem);
+      margin: 0 0 1.25rem;
+      color: #4a4b4b;
+      letter-spacing: 0.22em;
+    }
 
-        .description {
-            color: var(--muted);
-            font-size: 1rem;
-            line-height: 1.85;
-            margin-bottom: 28px;
-            max-width: 680px;
-            font-weight: 300;
-        }
+    .tagline {
+      font-size: clamp(0.65rem, 1.6vw, 0.82rem);
+      line-height: 1.9;
+      max-width: 38rem;
+      margin: 0 auto 2rem;
+      color: #3a3b3b;
+      font-weight: 400;
+    }
 
-        .meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 18px;
-            margin-bottom: 32px;
-        }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.65rem 1.25rem;
+      font-size: clamp(0.58rem, 1.4vw, 0.72rem);
+      color: #5a5b5b;
+      margin-bottom: 2rem;
+      letter-spacing: 0.06em;
+    }
 
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--muted);
-            font-size: 0.95rem;
-        }
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 2.25rem;
+    }
 
-        .meta-item i {
-            color: var(--accent);
-            font-size: 1rem;
-            width: 20px;
-            text-align: center;
-        }
+    .links a {
+      --clr: #1f2020;
+      color: inherit;
+      text-decoration: none;
+      font-size: clamp(0.58rem, 1.35vw, 0.72rem);
+      letter-spacing: 0.08em;
+      padding: 0.85rem 1rem;
+      border: 2px solid #1f2020;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
 
-        .action-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+    .links a:hover,
+    .links a:focus-visible {
+      background: #1f2020;
+      color: #fffcfc;
+      outline: none;
+    }
 
-        .btn {
-            text-decoration: none;
-            padding: 12px 18px;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            transition: transform 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid transparent;
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text);
-        }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      max-width: 36rem;
+      margin: 0 auto;
+      opacity: 0;
+      animation: fadeup 0.8s ease forwards;
+      animation-delay: 2s;
+    }
 
-        .btn:hover {
-            transform: translateY(-1px);
-            background: rgba(255, 255, 255, 0.08);
-        }
+    .stack span {
+      font-size: clamp(0.5rem, 1.2vw, 0.62rem);
+      letter-spacing: 0.08em;
+      padding: 0.45rem 0.65rem;
+      border: 1px solid rgba(31, 32, 32, 0.18);
+      color: #4a4b4b;
+    }
 
-        .btn-primary {
-            background: var(--accent);
-            color: var(--bg);
-            border-color: transparent;
-        }
-
-        .btn-primary:hover {
-            background: #d9f99d;
-        }
-
-        .hero-panel {
-            display: grid;
-            gap: 18px;
-        }
-
-        .panel-card {
-            padding: 24px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-        }
-
-        .panel-card h3 {
-            margin-bottom: 12px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: var(--accent);
-        }
-
-        .panel-card p {
-            color: var(--muted);
-            font-size: 0.97rem;
-            line-height: 1.75;
-            font-weight: 300;
-        }
-
-        .content {
-            padding: 44px 48px 48px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 32px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 20px;
-            padding: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .card h2 {
-            font-size: 0.95rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            margin-bottom: 20px;
-            color: var(--text);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 10px;
-        }
-
-        .impact-list,
-        .cert-list {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .impact-list li,
-        .cert-list li {
-            margin-bottom: 16px;
-            color: var(--muted);
-            font-size: 0.98rem;
-            line-height: 1.8;
-            font-weight: 300;
-        }
-
-        .impact-list strong {
-            color: var(--text);
-            font-weight: 600;
-        }
-
-        .skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .skill {
-            padding: 8px 14px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: var(--muted);
-            font-size: 0.86rem;
-            font-weight: 500;
-        }
-
-        .education p {
-            color: var(--muted);
-            font-size: 0.98rem;
-            line-height: 1.8;
-            font-weight: 300;
-        }
-
-        .education p strong {
-            color: var(--text);
-            font-weight: 600;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 28px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            color: #7c7f8c;
-            font-size: 0.9rem;
-            font-weight: 300;
-        }
-
-        @media (max-width: 900px) {
-            .hero {
-                grid-template-columns: 1fr;
-                padding: 40px 32px;
-            }
-
-            .meta,
-            .action-group {
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 700px) {
-            .content {
-                padding: 36px 28px 32px;
-            }
-
-            .hero {
-                padding: 32px 24px;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .profile-summary h1 {
-                font-size: 2.4rem;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
+    footer {
+      margin-top: 2.5rem;
+      font-size: clamp(0.5rem, 1.1vw, 0.6rem);
+      color: #8a8b8b;
+      letter-spacing: 0.12em;
+      opacity: 0;
+      animation: fadeup 0.8s ease forwards;
+      animation-delay: 2.2s;
+    }
+  </style>
 </head>
-
 <body>
+  <main>
+    <p class="hello" id="hello" aria-label="Hello"></p>
 
-    <div class="profile-wrapper">
-        <div class="profile-card">
+    <div class="intro">
+      <p class="name">KENT SUMBILON</p>
+      <p class="role">IT SPECIALIST</p>
+      <p class="tagline">
+        I keep systems running, networks secure, and workflows automated —
+        from servers and endpoints to internal web tools that make teams faster.
+      </p>
 
-            <section class="hero">
-                <div class="profile-summary">
-                    <div class="status-pill">
-                        <span class="dot"></span>
-                        Available for opportunities
-                    </div>
+      <div class="meta">
+        <span>TAGUIG CITY, PH</span>
+        <span>RAJAH TRAVEL CORPORATION</span>
+        <span>SYSTEMS · SECURITY · AUTOMATION</span>
+      </div>
 
-                    <h1>Kent Sumbilon</h1>
-                    <div class="role">IT Specialist</div>
+      <nav class="links" aria-label="Contact links">
+        <a href="mailto:kntsmbln1@gmail.com">EMAIL</a>
+        <a href="tel:09665680578">CALL</a>
+        <a href="Kent_Sumbilon_Resume.pdf" download>RESUME</a>
+        <a href="kent_sumbilon.vcf" download>CONTACT</a>
+        <a href="https://github.com/kentosama10" target="_blank" rel="noopener noreferrer">GITHUB</a>
+      </nav>
 
-                    <p class="description">
-                        IT professional with experience in systems administration,
-                        infrastructure support, cybersecurity, and business process
-                        automation. Passionate about efficient internal systems,
-                        workflow optimization, and reliable technical operations.
-                    </p>
-
-                    <div class="meta">
-                        <div class="meta-item">
-                            <i class="fas fa-location-dot"></i>
-                            Taguig City, Philippines
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-briefcase"></i>
-                            Rajah Travel Corporation
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-laptop-code"></i>
-                            Web Systems & IT Infrastructure
-                        </div>
-                    </div>
-
-                    <div class="action-group">
-                        <a href="tel:09665680578" class="btn btn-primary">
-                            <i class="fas fa-phone"></i> Call
-                        </a>
-                        <a href="mailto:kntsmbln1@gmail.com" class="btn">
-                            <i class="fas fa-envelope"></i> Email
-                        </a>
-                        <a href="kent_sumbilon.vcf" download class="btn">
-                            <i class="fas fa-address-book"></i> Save Contact
-                        </a>
-                        <a href="Kent_Sumbilon_Resume.pdf" download class="btn">
-                            <i class="fas fa-file-pdf"></i> Resume
-                        </a>
-                        <a href="https://github.com/kentosama10" target="_blank" class="btn">
-                            <i class="fab fa-github"></i> GitHub
-                        </a>
-                    </div>
-                </div>
-
-                <aside class="hero-panel">
-                    <div class="panel-card">
-                        <h3>Focus areas</h3>
-                        <p>Systems administration, infrastructure support, cybersecurity, and automation for modern business operations.</p>
-                    </div>
-                    <div class="panel-card">
-                        <h3>Approach</h3>
-                        <p>Streamline workflows, strengthen reliability, and keep systems secure with practical, no-fuss solutions.</p>
-                    </div>
-                </aside>
-            </section>
-
-            <section class="content">
-                <div class="grid">
-                    <div class="card">
-                        <h2>Key Creative Impact</h2>
-                        <ul class="impact-list">
-                            <li>
-                                <strong>Operations & Security:</strong> Managed IT assets, endpoint protection, backup validation, and business continuity initiatives.
-                            </li>
-                            <li>
-                                <strong>Efficiency & Automation:</strong> Developed internal systems including a web-based meeting room booking platform and queue management system.
-                            </li>
-                            <li>
-                                <strong>Infrastructure Support:</strong> Provided technical support, system maintenance, troubleshooting, and workflow optimization.
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="card">
-                        <h2>Core Technical Stack</h2>
-                        <div class="skills">
-                            <span class="skill">Windows Server</span>
-                            <span class="skill">Linux</span>
-                            <span class="skill">VMware</span>
-                            <span class="skill">Hyper-V</span>
-                            <span class="skill">Networking</span>
-                            <span class="skill">Cisco R&S</span>
-                            <span class="skill">VPN</span>
-                            <span class="skill">Firewall Management</span>
-                            <span class="skill">Python</span>
-                            <span class="skill">PowerShell</span>
-                            <span class="skill">PHP</span>
-                            <span class="skill">MySQL</span>
-                            <span class="skill">Microsoft 365</span>
-                            <span class="skill">Cybersecurity</span>
-                        </div>
-                    </div>
-
-                    <div class="card education">
-                        <h2>Education</h2>
-                        <p>
-                            <strong>Bachelor of Science in Information Technology</strong><br>
-                            St. Vincent’s College Incorporated<br>
-                            Graduated May 2023
-                        </p>
-                    </div>
-
-                    <div class="card">
-                        <h2>Certifications</h2>
-                        <ul class="cert-list">
-                            <li>Career Essentials in System Administration — Microsoft</li>
-                            <li>Information Security Fundamentals — Udemy</li>
-                            <li>Networking Basics — Cisco Networking Academy</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <div class="footer">
-                © 2026 Kent Sumbilon • Portfolio Profile Card
-            </div>
-
-        </div>
+      <div class="stack" aria-label="Core skills">
+        <span>WINDOWS SERVER</span>
+        <span>LINUX</span>
+        <span>VMWARE</span>
+        <span>NETWORKING</span>
+        <span>POWERSHELL</span>
+        <span>PYTHON</span>
+        <span>PHP</span>
+        <span>M365</span>
+        <span>CYBERSECURITY</span>
+      </div>
     </div>
 
-</body>
+    <footer>© 2026 KENT SUMBILON</footer>
+  </main>
 
+  <script>
+    const hello = document.getElementById("hello");
+    const text = "HELLO";
+
+    [...text].forEach((letter, index) => {
+      const span = document.createElement("span");
+      const yStart = `${(Math.random() * 60 - 30).toFixed(0)}vh`;
+      span.textContent = letter;
+      span.style.setProperty("--y-start", yStart);
+      span.style.setProperty("--delay", `${index * 80}ms`);
+      hello.appendChild(span);
+    });
+  </script>
+</body>
 </html>
