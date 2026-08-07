@@ -1,986 +1,284 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kent Sumbilon</title>
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2312161c'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='%23f5a623' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      :root {
-        --bg: #12161c;
-        --panel: #1b2129;
-        --panel-2: #20272f;
-        --line: #2a323c;
-        --text: #e4e7eb;
-        --muted: #8a94a3;
-        --amber: #f5a623;
-        --teal: #3fa796;
-        --red: #e5533d;
-        --font-display: "Space Grotesk", sans-serif;
-        --font-body: "Inter", sans-serif;
-        --font-mono: "IBM Plex Mono", monospace;
-      }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      @media (prefers-reduced-motion: reduce) {
-        html {
-          scroll-behavior: auto;
-        }
-        * {
-          animation-duration: 0.01ms !important;
-          transition-duration: 0.01ms !important;
-        }
-      }
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: var(--font-body);
-        line-height: 1.6;
-      }
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      ::selection {
-        background: var(--amber);
-        color: #12161c;
-      }
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kent@it: ~ - PuTTY</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230c0c0c'/%3E%3Ctext x='4' y='22' font-family='monospace' font-size='16' fill='%235fd75f'%3E%3E_%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c0c;
+    --panel:#161718;
+    --border:#2c2e2f;
+    --text:#e2e2e2;
+    --dim:#767c80;
+    --green:#5fd75f;
+    --cyan:#57c7d6;
+    --yellow:#e5c17a;
+    --red:#e06c75;
+    --blue:#61afef;
+    --font:'JetBrains Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important;}
+  }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font);
+    font-size:14px;
+    line-height:1.7;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--green);color:#0c0c0c;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--green);outline-offset:2px;}
 
-      /* focus visibility */
-      a:focus-visible,
-      button:focus-visible,
-      input:focus-visible,
-      textarea:focus-visible {
-        outline: 2px solid var(--amber);
-        outline-offset: 3px;
-      }
+  .scanlines{
+    position:fixed;inset:0;z-index:5;pointer-events:none;
+    background:repeating-linear-gradient(rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 3px);
+  }
 
-      .wrap {
-        max-width: 1040px;
-        margin: 0 auto;
-        padding: 0 28px;
-      }
+  /* ---------- WINDOW CHROME ---------- */
+  .titlebar{
+    position:sticky;top:0;z-index:20;
+    background:var(--panel);
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:8px 14px;
+    font-size:12.5px;
+  }
+  .titlebar-left{display:flex;align-items:center;gap:8px;color:#c8c8c8;}
+  .titlebar-icon{color:var(--green);}
+  .win-controls{display:flex;gap:6px;}
+  .win-btn{
+    width:22px;height:20px;
+    border:1px solid var(--border);
+    background:#1e1f20;
+    color:var(--dim);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;
+    cursor:default;
+  }
+  .win-btn.close:hover{background:var(--red);color:#0c0c0c;}
+  .win-btn.min:hover, .win-btn.max:hover{background:#333;color:var(--text);}
 
-      /* ---------- STATUS BAR (signature element) ---------- */
-      .statusbar {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        background: rgba(18, 22, 28, 0.92);
-        backdrop-filter: blur(8px);
-        border-bottom: 1px solid var(--line);
-      }
-      .statusbar-inner {
-        max-width: 1040px;
-        margin: 0 auto;
-        padding: 10px 28px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-family: var(--font-mono);
-        font-size: 12px;
-        color: var(--muted);
-        gap: 16px;
-        flex-wrap: wrap;
-      }
-      .statusbar-brand {
-        color: var(--text);
-        font-weight: 600;
-        letter-spacing: 0.02em;
-      }
-      .statusbar-metrics {
-        display: flex;
-        gap: 22px;
-        flex-wrap: wrap;
-      }
-      .metric {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        white-space: nowrap;
-      }
-      .dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: var(--teal);
-        box-shadow: 0 0 0 3px rgba(63, 167, 150, 0.15);
-        animation: pulse 2.4s ease-in-out infinite;
-        flex-shrink: 0;
-      }
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.45;
-        }
-      }
-      .statusbar nav {
-        display: flex;
-        gap: 18px;
-      }
-      .statusbar nav a {
-        color: var(--muted);
-        transition: color 0.15s;
-      }
-      .statusbar nav a:hover {
-        color: var(--amber);
-      }
+  .helpbar{
+    background:var(--bg);
+    border-bottom:1px solid var(--border);
+    padding:10px 0;
+  }
+  .helpbar .wrap{display:flex;gap:10px;flex-wrap:wrap;align-items:baseline;font-size:13px;}
+  .helpbar a{color:var(--cyan);text-decoration:none;border-bottom:1px dashed transparent;}
+  .helpbar a:hover{border-color:var(--cyan);}
 
-      /* ---------- HERO ---------- */
-      .hero {
-        padding: 110px 0 90px;
-        border-bottom: 1px solid var(--line);
-        position: relative;
-        overflow: hidden;
-      }
-      .hero::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background-image:
-          linear-gradient(var(--line) 1px, transparent 1px),
-          linear-gradient(90deg, var(--line) 1px, transparent 1px);
-        background-size: 48px 48px;
-        opacity: 0.25;
-        mask-image: radial-gradient(
-          ellipse 700px 400px at 30% 20%,
-          black,
-          transparent
-        );
-      }
-      .hero-glow {
-        position: absolute;
-        top: -180px;
-        right: -140px;
-        width: 520px;
-        height: 520px;
-        border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(245, 166, 35, 0.16),
-          rgba(63, 167, 150, 0.08) 45%,
-          transparent 70%
-        );
-        filter: blur(10px);
-        pointer-events: none;
-      }
-      .hero-inner {
-        position: relative;
-      }
-      .eyebrow {
-        font-family: var(--font-mono);
-        font-size: 12.5px;
-        color: var(--amber);
-        letter-spacing: 0.06em;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 22px;
-      }
-      .eyebrow .dot {
-        background: var(--amber);
-        box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.15);
-      }
-      h1 {
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: clamp(38px, 6vw, 64px);
-        line-height: 1.05;
-        letter-spacing: -0.02em;
-        max-width: 820px;
-      }
-      h1 span {
-        color: var(--muted);
-      }
-      .hero-sub {
-        margin-top: 22px;
-        font-size: 17px;
-        color: var(--muted);
-        max-width: 560px;
-      }
-      .hero-cta {
-        margin-top: 36px;
-        display: flex;
-        gap: 14px;
-        flex-wrap: wrap;
-      }
-      .btn {
-        font-family: var(--font-mono);
-        font-size: 13.5px;
-        padding: 12px 20px;
-        border-radius: 6px;
-        border: 1px solid var(--line);
-        transition:
-          border-color 0.15s,
-          transform 0.15s,
-          background 0.15s;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .btn-primary {
-        background: var(--amber);
-        color: #12161c;
-        border-color: var(--amber);
-        font-weight: 600;
-      }
-      .btn-primary:hover {
-        transform: translateY(-1px);
-        background: #ffb545;
-      }
-      .btn-ghost {
-        color: var(--text);
-      }
-      .btn-ghost:hover {
-        border-color: var(--muted);
-      }
+  .wrap{max-width:840px;margin:0 auto;padding:0 24px;}
 
-      .uptime-card {
-        margin-top: 56px;
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        max-width: 560px;
-        font-family: var(--font-mono);
-        overflow: hidden;
-        box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.5);
-      }
-      .uptime-titlebar {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 11px 16px;
-        border-bottom: 1px solid var(--line);
-        background: var(--panel-2);
-      }
-      .uptime-titlebar span.chip {
-        width: 9px;
-        height: 9px;
-        border-radius: 50%;
-        display: inline-block;
-      }
-      .chip-red {
-        background: var(--red);
-      }
-      .chip-amber {
-        background: var(--amber);
-      }
-      .chip-teal {
-        background: var(--teal);
-      }
-      .uptime-titlebar .filename {
-        margin-left: 6px;
-        font-size: 11.5px;
-        color: var(--muted);
-      }
-      .uptime-body {
-        padding: 20px 24px;
-      }
-      .uptime-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        font-size: 12.5px;
-        color: var(--muted);
-        margin-bottom: 10px;
-      }
-      .uptime-value {
-        font-size: 26px;
-        color: var(--teal);
-        font-weight: 600;
-        letter-spacing: 0.01em;
-      }
-      .uptime-bar {
-        height: 5px;
-        background: var(--panel-2);
-        border-radius: 4px;
-        overflow: hidden;
-        margin-top: 14px;
-      }
-      .uptime-bar-fill {
-        height: 100%;
-        width: 99.97%;
-        background: linear-gradient(90deg, var(--teal), #58c9b8);
-      }
+  /* ---------- TERMINAL BODY ---------- */
+  .terminal{padding:28px 0 80px;}
+  .motd{color:var(--dim);white-space:pre-wrap;font-size:13px;margin-bottom:26px;}
+  .motd .accent{color:var(--green);}
+  .motd .link{color:var(--blue);}
 
-      /* ---------- SECTION SHARED ---------- */
-      section {
-        padding: 80px 0;
-        border-bottom: 1px solid var(--line);
-      }
-      .section-head {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin-bottom: 40px;
-      }
-      .section-tag {
-        font-family: var(--font-mono);
-        font-size: 12px;
-        color: var(--amber);
-        border: 1px solid var(--line);
-        border-radius: 4px;
-        padding: 3px 8px;
-        flex-shrink: 0;
-      }
-      .section-head::after {
-        content: "";
-        height: 1px;
-        flex-grow: 1;
-        background: var(--line);
-      }
-      h2 {
-        font-family: var(--font-display);
-        font-size: clamp(24px, 3.4vw, 32px);
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        flex-shrink: 0;
-      }
+  .prompt-line{margin-top:26px;margin-bottom:6px;}
+  .prompt{color:var(--green);font-weight:700;}
+  .prompt .host{color:var(--green);}
+  .prompt .path{color:var(--blue);}
+  .cmd{color:var(--text);}
 
-      /* ---------- SCROLL REVEAL ---------- */
-      .reveal {
-        opacity: 0;
-        transform: translateY(18px);
-        transition:
-          opacity 0.6s ease,
-          transform 0.6s ease;
-      }
-      .reveal.in-view {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .reveal {
-          opacity: 1;
-          transform: none;
-          transition: none;
-        }
-      }
+  .output{color:var(--text);white-space:pre-wrap;font-size:13.5px;}
+  .output p{margin-bottom:10px;max-width:640px;}
+  .output .dim{color:var(--dim);}
+  .output .green{color:var(--green);}
+  .output .cyan{color:var(--cyan);}
+  .output .yellow{color:var(--yellow);}
 
-      /* ---------- ABOUT ---------- */
-      .about-grid {
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 56px;
-      }
-      .about-text p {
-        color: var(--muted);
-        margin-bottom: 16px;
-        max-width: 520px;
-      }
-      .about-text p strong {
-        color: var(--text);
-        font-weight: 600;
-      }
-      .specs {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        font-family: var(--font-mono);
-        font-size: 13px;
-        overflow: hidden;
-      }
-      .specs-header {
-        padding: 12px 18px;
-        border-bottom: 1px solid var(--line);
-        color: var(--muted);
-        display: flex;
-        justify-content: space-between;
-      }
-      .specs-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 12px 18px;
-        border-bottom: 1px solid var(--line);
-      }
-      .specs-row:last-child {
-        border-bottom: none;
-      }
-      .specs-row span:first-child {
-        color: var(--muted);
-      }
-      .specs-row span:last-child {
-        color: var(--text);
-        text-align: right;
-      }
+  .ls-line{display:block;}
+  .ls-line .perm{color:var(--dim);}
+  .ls-line .name{color:var(--cyan);}
+  .ls-line .comment{color:var(--dim);}
 
-      /* ---------- SKILLS AS SERVICES ---------- */
-      .services {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-      }
-      .service {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        padding: 18px 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        transition:
-          border-color 0.15s,
-          transform 0.15s;
-      }
-      .service:hover {
-        border-color: var(--teal);
-        transform: translateY(-2px);
-      }
-      .service-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .service-name {
-        font-weight: 600;
-        font-size: 15px;
-      }
-      .service-status {
-        font-family: var(--font-mono);
-        font-size: 11px;
-        color: var(--teal);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .service-desc {
-        color: var(--muted);
-        font-size: 13.5px;
-      }
-      .service-meter {
-        height: 4px;
-        background: var(--panel-2);
-        border-radius: 3px;
-        overflow: hidden;
-      }
-      .service-meter-fill {
-        height: 100%;
-        background: var(--amber);
-      }
+  .log-line{display:block;margin-bottom:10px;}
+  .log-line .ts{color:var(--dim);}
+  .log-line .level{color:var(--green);font-weight:700;}
+  .log-line .body{color:var(--text);display:block;margin-left:2px;}
 
-      /* ---------- EXPERIENCE AS LOG ---------- */
-      .log {
-        font-family: var(--font-mono);
-        font-size: 13.5px;
-      }
-      .log-entry {
-        display: grid;
-        grid-template-columns: 150px 1fr;
-        gap: 24px;
-        padding: 22px 0;
-        border-top: 1px solid var(--line);
-      }
-      .log-entry:last-child {
-        border-bottom: 1px solid var(--line);
-      }
-      .log-time {
-        color: var(--muted);
-      }
-      .log-time .current {
-        color: var(--teal);
-      }
-      .log-role {
-        font-family: var(--font-display);
-        font-size: 17px;
-        font-weight: 600;
-        margin-bottom: 4px;
-      }
-      .log-org {
-        color: var(--amber);
-        font-size: 13px;
-        margin-bottom: 10px;
-      }
-      .log-body {
-        color: var(--muted);
-        font-family: var(--font-body);
-        font-size: 14.5px;
-        max-width: 560px;
-      }
+  .readme{margin-bottom:18px;}
+  .readme .h{color:var(--yellow);font-weight:700;}
+  .readme .stack{color:var(--dim);}
 
-      /* ---------- PROJECTS ---------- */
-      .projects {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 18px;
-      }
-      .project {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        padding: 22px;
-        display: flex;
-        flex-direction: column;
-        transition:
-          border-color 0.15s,
-          transform 0.15s;
-      }
-      .project:hover {
-        border-color: var(--amber);
-        transform: translateY(-2px);
-      }
-      .project-icon {
-        width: 34px;
-        height: 34px;
-        border-radius: 7px;
-        background: var(--panel-2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--font-mono);
-        color: var(--amber);
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 16px;
-      }
-      .project h3 {
-        font-family: var(--font-display);
-        font-size: 16.5px;
-        margin-bottom: 8px;
-      }
-      .project p {
-        color: var(--muted);
-        font-size: 13.5px;
-        flex-grow: 1;
-      }
-      .project-tags {
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-        margin-top: 16px;
-      }
-      .tag {
-        font-family: var(--font-mono);
-        font-size: 10.5px;
-        color: var(--muted);
-        border: 1px solid var(--line);
-        border-radius: 4px;
-        padding: 3px 7px;
-      }
+  .kv-line{display:flex;gap:10px;}
+  .kv-line .k{color:var(--dim);width:80px;flex-shrink:0;}
+  .kv-line .v{color:var(--text);}
 
-      /* ---------- CONTACT AS CONFIG ---------- */
-      .contact-panel {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        padding: 36px;
-        max-width: 640px;
-        font-family: var(--font-mono);
-        font-size: 14px;
-      }
-      .contact-line {
-        color: var(--muted);
-        margin-bottom: 8px;
-      }
-      .contact-line .key {
-        color: var(--teal);
-      }
-      .contact-line .val {
-        color: var(--text);
-      }
-      .contact-cta {
-        margin-top: 26px;
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
+  .mail-link{color:var(--cyan);text-decoration:underline;text-decoration-style:dashed;}
+  .mail-link:hover{color:var(--green);}
 
-      footer {
-        padding: 32px 0;
-        font-family: var(--font-mono);
-        font-size: 12px;
-        color: var(--muted);
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
+  .cursor{
+    display:inline-block;width:8px;height:16px;
+    background:var(--green);
+    animation:blink 1s steps(1) infinite;
+    vertical-align:middle;
+    margin-left:4px;
+  }
+  @keyframes blink{50%{opacity:0;}}
+  @media (prefers-reduced-motion: reduce){.cursor{animation:none;opacity:1;}}
 
-      @media (max-width: 760px) {
-        .about-grid {
-          grid-template-columns: 1fr;
-        }
-        .services {
-          grid-template-columns: 1fr;
-        }
-        .projects {
-          grid-template-columns: 1fr;
-        }
-        .log-entry {
-          grid-template-columns: 1fr;
-          gap: 6px;
-        }
-        .statusbar-inner {
-          font-size: 11px;
-        }
-        .statusbar nav {
-          display: none;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="statusbar">
-      <div class="statusbar-inner">
-        <span class="statusbar-brand">kentosama10.github.io</span>
-        <div class="statusbar-metrics">
-          <span class="metric"
-            ><span class="dot"></span> all systems operational</span
-          >
-          <span class="metric"
-            >uptime <span style="color: var(--text)">99.97%</span></span
-          >
-          <span class="metric"
-            >latency <span style="color: var(--text)">14ms</span></span
-          >
-        </div>
-        <nav>
-          <a href="#about">about</a>
-          <a href="#skills">skills</a>
-          <a href="#experience">log</a>
-          <a href="#projects">projects</a>
-          <a href="#contact">contact</a>
-        </nav>
-      </div>
+  .reveal{opacity:0;transform:translateY(10px);transition:opacity .45s ease, transform .45s ease;}
+  .reveal.in-view{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none;}}
+
+  @media (max-width:600px){
+    .kv-line .k{width:64px;}
+    .titlebar-left span.full{display:none;}
+  }
+</style>
+</head>
+<body>
+  <div class="scanlines"></div>
+
+  <div class="titlebar">
+    <div class="titlebar-left">
+      <span class="titlebar-icon">&gt;_</span>
+      <span class="full">kent@it: ~ - PuTTY</span>
     </div>
+    <div class="win-controls">
+      <div class="win-btn min">_</div>
+      <div class="win-btn max">▢</div>
+      <div class="win-btn close">×</div>
+    </div>
+  </div>
 
-    <header class="hero">
-      <div class="hero-glow"></div>
-      <div class="wrap hero-inner">
-        <div class="eyebrow"><span class="dot"></span> IT Specialist</div>
-        <h1>
-          Keeping systems running,<br /><span
-            >so nobody has to think about them. </span
-          >Making "IT" Simple.
-        </h1>
-        <p class="hero-sub">
-          I'm Kent Sumbilon, an IT Specialist. I manage enterprise
-          infrastructure and security, and build internal tools that speed up
-          everyday work.
-        </p>
-        <div class="hero-cta">
-          <a href="#contact" class="btn btn-primary">Get in touch →</a>
-          <a href="#projects" class="btn btn-ghost">View projects</a>
+  <div class="helpbar">
+    <div class="wrap">
+      <span class="dim" style="color:var(--dim);">kent@it:~$ help</span>
+      <span class="dim" style="color:var(--dim);">available:</span>
+      <a href="#about">about</a>
+      <a href="#skills">skills</a>
+      <a href="#experience">experience</a>
+      <a href="#projects">projects</a>
+      <a href="#contact">contact</a>
+    </div>
+  </div>
+
+  <main class="terminal">
+    <div class="wrap">
+
+      <pre class="motd">kent@it.local's password: 
+Welcome to Ubuntu 24.04.1 LTS (GNU/Linux 6.8.0-45-generic x86_64)
+
+ * Documentation:  <span class="link">https://help.ubuntu.com</span>
+ * Support:        <span class="link">https://ubuntu.com/pro</span>
+
+  System load:   0.08                Users logged in:  1
+  Usage of /:    41.2% of 128GB      IPv4 address:     10.0.4.12
+  Memory usage:  22%                 Status:            <span class="accent">all systems normal</span>
+
+Last login: Thu Aug  6 21:47:03 2026 from 10.0.4.7</pre>
+
+      <div class="prompt-line">
+        <span class="prompt"><span class="host">kent@it</span>:<span class="path">~</span>$</span> <span class="cmd">whoami</span>
+      </div>
+      <div class="output">kent sumbilon, it specialist</div>
+
+      <div class="prompt-line">
+        <span class="prompt"><span class="host">kent@it</span>:<span class="path">~</span>$</span> <span class="cmd">neofetch --minimal</span>
+      </div>
+      <div class="output">
+        <div class="kv-line"><span class="k">os</span><span class="v">Ubuntu 24.04 LTS</span></div>
+        <div class="kv-line"><span class="k">host</span><span class="v">Rajah Travel Corporation</span></div>
+        <div class="kv-line"><span class="k">uptime</span><span class="v">since Nov 2023</span></div>
+        <div class="kv-line"><span class="k">shell</span><span class="v">bash 5.2</span></div>
+        <div class="kv-line"><span class="k">location</span><span class="v">Manila, PH</span></div>
+      </div>
+
+      <div class="prompt-line reveal" id="about">
+        <span class="prompt"><span class="host">kent@it</span>:<span class="path">~</span>$</span> <span class="cmd">cat about.txt</span>
+      </div>
+      <div class="output reveal">
+        <p>I manage enterprise IT infrastructure end to end, from hardware and networks to endpoint security, keeping business-critical systems online. I also build internal tools, like a meeting room booking app that cut wait times org-wide.</p>
+        <p>Currently pursuing a <span class="green">Master of Science in Information Technology</span> at PUP Manila, on top of a BS in IT from St. Vincent's College. I like fixing root causes, not just symptoms.</p>
+      </div>
+
+      <div class="prompt-line reveal" id="skills">
+        <span class="prompt"><span class="host">kent@it</span>:<span class="path">~</span>$</span> <span class="cmd">ls -la skills/</span>
+      </div>
+      <div class="output reveal">
+        <span class="ls-line"><span class="perm">-rwxr-xr-x</span>  1 kent it  4.0K  <span class="name">system-administration</span>       <span class="comment"># windows support, endpoint maintenance, linux (ubuntu) admin</span></span>
+        <span class="ls-line"><span class="perm">-rwxr-xr-x</span>  1 kent it  4.0K  <span class="name">networking-and-security</span>     <span class="comment"># tcp/ip, lan/wan setup, troubleshooting, security practices</span></span>
+        <span class="ls-line"><span class="perm">-rwxr-xr-x</span>  1 kent it  4.0K  <span class="name">web-development</span>              <span class="comment"># php (laravel/mvc), mysql/mariadb, javascript, rest apis</span></span>
+        <span class="ls-line"><span class="perm">-rwxr-xr-x</span>  1 kent it  4.0K  <span class="name">tier-1-2-support</span>             <span class="comment"># incident troubleshooting, user support, sla compliance</span></span>
+      </div>
+
+      <div class="prompt-line reveal" id="experience">
+        <span class="prompt"><span class="host">kent@it</span>:<span class="path">~</span>$</span> <span class="cmd">tail -n 3 experience.log</span>
+      </div>
+      <div class="output reveal">
+        <span class="log-line"><span class="ts">[2023-11-01]</span> <span class="level">INFO</span>  it-specialist@it-corporation started, status=active<span class="body dim">  manages infrastructure and endpoint security, built meeting room booking and queue management apps, handles backups and tier 1-2 support against sla targets</span></span>
+        <span class="log-line"><span class="ts">[2026-07-01]</span> <span class="level">INFO</span>  ms-information-technology@pup-manila started, status=in_progress</span>
+        <span class="log-line"><span class="ts">[2023-01-01]</span> <span class="level">INFO</span>  bs-information-technology@st-vincents-college completed, status=done</span>
+      </div>
+
+      <div class="prompt-line reveal" id="projects">
+        <span class="prompt"><span class="host">kent@it</span>:<span class="path">~</span>$</span> <span class="cmd">cat projects/*/README.md</span>
+      </div>
+      <div class="output reveal">
+        <div class="readme">
+          <div class="h"># meeting-room-booking-system</div>
+          <p>internal web app for scheduling meeting rooms across the organization, cutting conflicts and wait times.</p>
+          <div class="stack">stack: php, laravel, mysql</div>
         </div>
-
-        <div class="uptime-card">
-          <div class="uptime-titlebar">
-            <span class="chip chip-red"></span>
-            <span class="chip chip-amber"></span>
-            <span class="chip chip-teal"></span>
-            <span class="filename">status.sh</span>
-          </div>
-          <div class="uptime-body">
-            <div class="uptime-row">
-              <span>career_uptime</span><span>since Nov 2023</span>
-            </div>
-            <div class="uptime-value" id="uptimeCounter">calculating…</div>
-            <div class="uptime-bar"><div class="uptime-bar-fill"></div></div>
-          </div>
+        <div class="readme">
+          <div class="h"># queue-management-system</div>
+          <p>web app built to streamline customer queuing, reducing wait times and improving staff visibility.</p>
+          <div class="stack">stack: php, javascript, mysql</div>
         </div>
       </div>
-    </header>
 
-    <section id="about" class="reveal">
-      <div class="wrap about-grid">
-        <div class="about-text">
-          <div class="section-head">
-            <span class="section-tag">01</span>
-            <h2>About</h2>
-          </div>
-          <p>
-            I manage enterprise IT infrastructure end to end, from hardware and
-            networks to endpoint security, keeping business-critical systems
-            online. I also build internal tools, like a meeting room booking app
-            that cut wait times org-wide.
-          </p>
-          <p>
-            Currently pursuing a
-            <strong>Master of Science in Information Technology</strong> at PUP
-            Manila, on top of a BS in IT from St. Vincent's College.
-            <strong>I like fixing root causes, not just symptoms.</strong>
-          </p>
-        </div>
-        <div class="specs">
-          <div class="specs-header">
-            <span>system.config</span><span>v2.0</span>
-          </div>
-          <div class="specs-row">
-            <span>role</span><span>IT Specialist</span>
-          </div>
-          <div class="specs-row">
-            <span>focus</span><span>Infra, Security, Network, Support</span>
-          </div>
-          <div class="specs-row">
-            <span>education</span><span>BS IT '23 · MS IT (in progress)</span>
-          </div>
-          <div class="specs-row">
-            <span>certs</span
-            ><span>Cisco Networking Basics, Info Security Fundamentals</span>
-          </div>
-          <div class="specs-row">
-            <span>location</span><span>Manila, PH</span>
-          </div>
-          <div class="specs-row">
-            <span>status</span
-            ><span style="color: var(--teal)"
-              >● employed, open to opportunities</span
-            >
-          </div>
-        </div>
+      <div class="prompt-line reveal" id="contact">
+        <span class="prompt"><span class="host">kent@it</span>:<span class="path">~</span>$</span> <span class="cmd">cat contact.txt</span>
       </div>
-    </section>
-
-    <section id="skills" class="reveal">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="section-tag">02</span>
-          <h2>Core services</h2>
-        </div>
-        <div class="services">
-          <div class="service">
-            <div class="service-top">
-              <span class="service-name">System Administration</span
-              ><span class="service-status"
-                ><span class="dot"></span>online</span
-              >
-            </div>
-            <p class="service-desc">
-              Windows OS support, endpoint maintenance, and Linux (Ubuntu)
-              admin.
-            </p>
-            <div class="service-meter">
-              <div class="service-meter-fill" style="width: 92%"></div>
-            </div>
-          </div>
-          <div class="service">
-            <div class="service-top">
-              <span class="service-name">Networking and Security</span
-              ><span class="service-status"
-                ><span class="dot"></span>online</span
-              >
-            </div>
-            <p class="service-desc">
-              TCP/IP, LAN/WAN setup, troubleshooting, and cybersecurity best
-              practices.
-            </p>
-            <div class="service-meter">
-              <div class="service-meter-fill" style="width: 85%"></div>
-            </div>
-          </div>
-          <div class="service">
-            <div class="service-top">
-              <span class="service-name">Web Development</span
-              ><span class="service-status"
-                ><span class="dot"></span>online</span
-              >
-            </div>
-            <p class="service-desc">
-              PHP (Laravel/MVC), MySQL/MariaDB, JavaScript, and REST API
-              integration.
-            </p>
-            <div class="service-meter">
-              <div class="service-meter-fill" style="width: 80%"></div>
-            </div>
-          </div>
-          <div class="service">
-            <div class="service-top">
-              <span class="service-name">Tier 1-2 support</span
-              ><span class="service-status"
-                ><span class="dot"></span>online</span
-              >
-            </div>
-            <p class="service-desc">
-              Incident troubleshooting and user support, consistently meeting
-              SLA targets.
-            </p>
-            <div class="service-meter">
-              <div class="service-meter-fill" style="width: 95%"></div>
-            </div>
-          </div>
-        </div>
+      <div class="output reveal">
+        <div class="kv-line"><span class="k">email</span><span class="v"><a href="mailto:kntsmbln1@gmail.com" class="mail-link">kntsmbln1@gmail.com</a></span></div>
+        <div class="kv-line"><span class="k">phone</span><span class="v">0966 568 0578</span></div>
+        <div class="kv-line"><span class="k">location</span><span class="v">Manila, PH</span></div>
+        <div class="kv-line"><span class="k">status</span><span class="v green">employed, open to opportunities</span></div>
       </div>
-    </section>
 
-    <section id="experience" class="reveal">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="section-tag">03</span>
-          <h2>Change log</h2>
-        </div>
-        <div class="log">
-          <div class="log-entry">
-            <div class="log-time">
-              Nov 2023 <span class="current">- now</span>
-            </div>
-            <div>
-              <div class="log-role">IT Specialist</div>
-              <div class="log-org">Rajah Travel Corporation</div>
-              <div class="log-body">
-                Manage enterprise IT infrastructure and endpoint security
-                org-wide. Built internal meeting room booking and queue
-                management apps that cut wait times. Handle backups, disaster
-                recovery, and tier 1-2 support against SLA targets.
-              </div>
-            </div>
-          </div>
-          <div class="log-entry">
-            <div class="log-time">
-              Jul 2026 <span class="current">- now</span>
-            </div>
-            <div>
-              <div class="log-role">MS in Information Technology</div>
-              <div class="log-org">
-                Polytechnic University of the Philippines
-              </div>
-              <div class="log-body">Pursuing a master's degree in IT.</div>
-            </div>
-          </div>
-          <div class="log-entry">
-            <div class="log-time">2023</div>
-            <div>
-              <div class="log-role">BS in Information Technology</div>
-              <div class="log-org">St. Vincent's College Incorporated</div>
-              <div class="log-body">
-                Graduated with a bachelor's degree in IT.
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="prompt-line reveal">
+        <span class="prompt"><span class="host">kent@it</span>:<span class="path">~</span>$</span> <span class="cmd"><a href="mailto:kntsmbln1@gmail.com" style="color:var(--cyan);">mail -s "let's talk" kntsmbln1@gmail.com</a></span>
       </div>
-    </section>
 
-    <section id="projects" class="reveal">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="section-tag">04</span>
-          <h2>Projects</h2>
-        </div>
-        <div class="projects">
-          <div class="project">
-            <div class="project-icon">01</div>
-            <h3>Meeting Room Booking System</h3>
-            <p>
-              Internal web app for scheduling meeting rooms across the
-              organization, cutting conflicts and wait times.
-            </p>
-            <div class="project-tags">
-              <span class="tag">PHP / Laravel</span
-              ><span class="tag">MySQL</span>
-            </div>
-          </div>
-          <div class="project">
-            <div class="project-icon">02</div>
-            <h3>Queue Management System</h3>
-            <p>
-              Web app built to streamline customer queuing, reducing wait times
-              and improving staff visibility.
-            </p>
-            <div class="project-tags">
-              <span class="tag">PHP</span><span class="tag">JavaScript</span
-              ><span class="tag">MySQL</span>
-            </div>
-          </div>
-        </div>
+      <div class="prompt-line">
+        <span class="prompt"><span class="host">kent@it</span>:<span class="path">~</span>$</span><span class="cursor"></span>
       </div>
-    </section>
 
-    <section id="contact" class="reveal" style="border-bottom: none">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="section-tag">05</span>
-          <h2>Get in touch</h2>
-        </div>
-        <div class="contact-panel">
-          <div class="contact-line">
-            <span class="key">email</span> →
-            <span class="val">kntsmbln1@gmail.com</span>
-          </div>
-          <div class="contact-line">
-            <span class="key">phone</span> →
-            <span class="val">0966 568 0578</span>
-          </div>
-          <div class="contact-line">
-            <span class="key">location</span> →
-            <span class="val">Manila, Philippines</span>
-          </div>
-          <div class="contact-cta">
-            <a href="mailto:kntsmbln1@gmail.com" class="btn btn-primary"
-              >Send an email →</a
-            >
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
+  </main>
 
-    <footer>
-      <div
-        class="wrap"
-        style="
-          display: flex;
-          justify-content: space-between;
-          width: 100%;
-          flex-wrap: wrap;
-          gap: 10px;
-        "
-      >
-        <span>© 2026 Kent Sumbilon</span>
-        <span>Built with pure HTML/CSS/JS · no framework required</span>
-      </div>
-    </footer>
-
-    <script>
-      // Reveal sections as they scroll into view
-      (function () {
-        const items = document.querySelectorAll(".reveal");
-        if (!("IntersectionObserver" in window)) {
-          items.forEach((el) => el.classList.add("in-view"));
-          return;
+<script>
+  (function(){
+    const items = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){
+      items.forEach(el => el.classList.add('in-view'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
         }
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("in-view");
-                io.unobserve(entry.target);
-              }
-            });
-          },
-          { threshold: 0.12 },
-        );
-        items.forEach((el) => io.observe(el));
-      })();
+      });
+    }, { threshold: 0.1 });
+    items.forEach(el => io.observe(el));
+  })();
+</script>
 
-      // Live-updating career uptime counter, in keeping with the monitoring theme
-      (function () {
-        const start = new Date("2023-11-01T00:00:00");
-        const el = document.getElementById("uptimeCounter");
-        function update() {
-          const now = new Date();
-          const diffMs = now - start;
-          const years = diffMs / (1000 * 60 * 60 * 24 * 365.25);
-          el.textContent = years.toFixed(6) + " yrs";
-        }
-        update();
-        setInterval(update, 100);
-      })();
-    </script>
-  </body>
+</body>
 </html>
